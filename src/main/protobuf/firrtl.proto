@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package firsim;
+ 
+message SimRequest {
+  repeated string req = 1;  
+}
+ 
+message SimResponse {
+  repeated string resp = 1;
+}
+
+service Sim {
+  rpc proc (SimRequest) returns (SimResponse);
+  
+  rpc procStream (stream SimRequest) returns (stream SimResponse);
+}
