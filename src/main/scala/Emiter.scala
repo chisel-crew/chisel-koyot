@@ -1,4 +1,4 @@
-package hello.emiter
+package koyot.emiter
 
 import firrtl.{ AnnotationSeq }
 
@@ -8,9 +8,9 @@ final case object Verilog extends Form
 final case object High    extends Form
 final case object Low     extends Form
 
-class Emiter() {
+object Emiter {
 
-  private lazy val stage = new chisel3.stage.ChiselStage
+  private val stage = new chisel3.stage.ChiselStage
 
   def emit(path: String, ann: AnnotationSeq, form: Form): Object = form match {
     case Verilog => stage.execute((Array("-td", path, "-X", "verilog")), ann)
