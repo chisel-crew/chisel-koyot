@@ -1,4 +1,4 @@
-package firsim
+package koyot
 
 import io.grpc.ManagedChannelBuilder
 import firsim.firrtl._
@@ -10,23 +10,19 @@ import zio.stream.{ Stream }
 
 object KoyotClient {
 
-  def clientLayer: Layer[Throwable, SimClient] =
+  private val clientLayer: Layer[Throwable, SimClient] =
     SimClient.live(
       ZManagedChannel(
         ManagedChannelBuilder.forAddress("localhost", 9090).usePlaintext()
       )
     )
 
-  val data = List("Hello Boris", "How are you")
-
-  def myAppLogic =
+  def getVerilog(firdata: List[String]) =
     (for {
-      r0 <- SimClient.proc(SimRequest(data))
-      _  <- putStrLn(">>> Effect response")
-      _  <- putStrLn(r0.resp.toString)
-      r1 <- SimClient.procStream(Stream.fromIterable(List(SimRequest(data)))).runCollect
-      _  <- putStrLn(">>> Stream response")
-      _  <- putStrLn(r1.map(_.resp.toString).toString)
+      _    <- putStrLn(">>> Started converting FIRRTL to Verilog")
+      resp <- SimClient.procStream(Stream.fromIterable(List(SimRequest(firdata)))).runCollect
+      _    <- putStrLn(">>> Response")
+      _    <- putStrLn(resp.map(_.resp.toString).toString)
     } yield ())
       .onError(c => putStrLn(c.prettyPrint))
       .provideLayer(Console.live ++ clientLayer)
