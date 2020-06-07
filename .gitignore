@@ -1,8 +1,10 @@
 .bloop
 .metals
-.idea 
+.idea
 .vscode
 target
+fir
 project/target
 project/project 
+project/.bloop
 project/metals.sbt

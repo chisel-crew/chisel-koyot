@@ -1,13 +1,14 @@
 package demo
 
-import koyot._
-import koyot.emiter._
+import koyot.client._
 import hw.Counter
+import zio.{ ZIO }
+import zio.console.{ putStrLn }
 
 object App0 extends zio.App {
-  def run(args: List[String]) = app0.exitCode
+  def run(args: List[String]) = app1.exitCode
 
-  val firhome = "src/main/scala/fir/"
+  val firhome = "fir/"
   val circuit = firhome + "Counter.fir"
 
   val cntCircuit = Seq(
@@ -15,8 +16,13 @@ object App0 extends zio.App {
   )
 
   val app0 = {
-    Emiter.emit(firhome, cntCircuit, High)
-    val lines = Koyot.load(circuit)
-    Koyot.getVerilog(lines)
+    Koyot.emit(firhome, cntCircuit, High)
+    ZIO.unit
   }
+
+  val app1 = for {
+    resp <- Koyot.ping()
+    _    <- putStrLn(resp.toString)
+  } yield resp
+
 }
