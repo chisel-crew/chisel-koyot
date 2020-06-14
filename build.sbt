@@ -3,7 +3,8 @@
 resolvers ++= Seq(
   Resolver.mavenLocal,
   Resolver.sonatypeRepo("releases"),
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("snapshots"),
+  Resolver.bintrayRepo("neurodyne-systems", "koyot-client")
 )
 
 lazy val commonSettings = Seq(
@@ -23,7 +24,7 @@ lazy val zioDeps = libraryDependencies ++= Seq(
 )
 
 lazy val koyotDeps = libraryDependencies ++= Seq(
-  "io.github.neurodyne" %% "koyot-client" % Version.koyot
+  "koyot-client" %% "koyot-client" % Version.koyot
 )
 
 lazy val root = (project in file("."))
