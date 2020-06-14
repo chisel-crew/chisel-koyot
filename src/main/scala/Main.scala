@@ -1,28 +1,21 @@
 package demo
 
-import koyot.client._
-import hw.Counter
-import zio.{ ZIO }
-import zio.console.{ putStrLn }
+import hw._
 
 object App0 extends zio.App {
   def run(args: List[String]) = app1.exitCode
 
-  val firhome = "fir/"
-  val circuit = firhome + "Counter.fir"
+  val bufCircuit = Seq(
+    chisel3.stage.ChiselGeneratorAnnotation(() => new Regbuffer())
+  )
 
   val cntCircuit = Seq(
     chisel3.stage.ChiselGeneratorAnnotation(() => new Counter(2))
   )
 
-  val app0 = {
-    Koyot.emit(firhome, cntCircuit, High)
-    ZIO.unit
-  }
-
-  val app1 = for {
-    resp <- Koyot.ping()
-    _    <- putStrLn(resp.toString)
-  } yield resp
+  // Output Circtuits
+  val app0 = KoyotApi.getVerilog(bufCircuit)
+  val app1 = KoyotApi.getVerilog(cntCircuit)
+  val app2 = KoyotApi.getFirrtl(cntCircuit)
 
 }
